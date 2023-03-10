@@ -13,3 +13,8 @@ out/
 
 # build files
 build
+
+**/bin
+**/.settings/
+**/.classpath
+**/.project
