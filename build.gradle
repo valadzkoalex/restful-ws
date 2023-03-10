@@ -2,6 +2,11 @@ plugins {
 	id 'org.springframework.boot' version '2.4.5'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
+	id 'jacoco'
+}
+
+jacoco {
+	toolVersion = "0.8.8"
 }
 
 apply plugin: 'io.spring.dependency-management'
@@ -16,4 +21,27 @@ repositories {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+task jacocoCoverageReport(type: JacocoReport) {
+	sourceSets sourceSets.main
+	getExecutionData().setFrom(fileTree(rootDir.getAbsolutePath()).include("coverage.exec"))
+	reports {
+		html.enabled = true
+		html.destination file(rootDir.getAbsolutePath() + "/build/coverage/report")
+	}
+}
+
+task jacocoCoverageVerification(type: JacocoCoverageVerification) {
+	sourceSets sourceSets.main
+	getExecutionData().setFrom(fileTree(rootDir.getAbsolutePath()).include("coverage.exec"))
+
+	violationRules {
+		failOnViolation = true
+		rule {
+			limit {
+				minimum = 1.0
+			}
+		}
+	}
 }
